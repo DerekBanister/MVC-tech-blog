@@ -25,7 +25,7 @@ router.post("/", async (req, res) => {
 router.put("/", async (req, res) => {
     //update comment
     try {
-        console.log("uve hit this route 3")
+        console.log("uve hit this route 2")
     } catch (err) {
         console.log(err);
         res.status(500).json(err)
@@ -36,7 +36,7 @@ router.put("/", async (req, res) => {
 router.delete("/:id", async (req, res) => {
     //delete comment
     try {
-        console.log("uve hit this route 4")
+        console.log("uve hit this route 3")
     } catch (err) {
         console.log(err);
         res.status(500).json(err)
