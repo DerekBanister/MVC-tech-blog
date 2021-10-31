@@ -35,16 +35,15 @@ router.get("/", async (req, res) => {
             return;
         }
         const posts = postData.map((post) => post.get({ plain: true }));
-        console.log(posts);
+        // console.log(posts);
         //then render to homepage
+        res.render("home", { posts, loggedIn: req.session.loggedIn })
     } catch (err) {
         console.log(err);
         res.status(500).json(err)
     }
 })
-
 //will render to handlebars page later, route working though
-
 
 router.get("/viewpost/:id", async (req, res) => {
 
@@ -54,33 +53,38 @@ router.get("/viewpost/:id", async (req, res) => {
                 id: req.params.id,
             },
             attributes: ["id", "title", "body", "user_id"],
-            // include: [
-            //     {
-            //         model: User,
-            //         as: "user",
-            //         attributes: ["username"],
-            //     },
-            //     {
-            //         model: Comment,
-            //         as: "comments",
-            //         attributes: ["id", "comment_text", "user_id"],
-            //         include: [
-            //             {
-            //                 model: User,
-            //                 as: "user",
-            //                 attributes: ["username"],
-            //             },
-            //         ],
-            //     },
-            // ]
+            include: [
+                {
+                    model: User,
+                    as: "user",
+                    attributes: ["username"],
+                },
+                {
+                    model: Comment,
+                    as: "comments",
+                    attributes: ["id", "comment_text", "user_id"],
+                    include: [
+                        {
+                            model: User,
+                            as: "user",
+                            attributes: ["username"],
+                        },
+                    ],
+                },
+            ]
         })
         if (!viewPost) {
             res.status(404).json({ message: "No Posts Available" });
             return;
         }
         const post = viewPost.get({ plain: true }); // serialize all the posts
-        console.log(post);
-        //then render
+        //console.log(post);
+        //then render a view single post page I have to make, check if logged in on every render
+        const myPost = post.user_id == req.session.user_id;
+        //check if loggedin/which user/what post
+        res.render("onePost", {
+            post, loggedIn: req.session.loggedIn, currentUser: myPost,
+        })
     } catch (err) {
         console.log(err);
         res.status(500).json(err)
@@ -88,7 +92,9 @@ router.get("/viewpost/:id", async (req, res) => {
 })
 router.get("/login", async (req, res) => {
     try {
-        console.log("uve hit this route 2")
+        //just render login page
+        res.render("login", { loggedIn: req.session.loggedIn })
+
     } catch (err) {
         console.log(err);
         res.status(500).json(err)
@@ -99,17 +105,49 @@ router.get("/login", async (req, res) => {
 
 router.get("/post", async (req, res) => {
     try {
-        console.log("uve hit this route 3")
+        res.render("createPost", { loggedIn: req.session.loggedIn })
     } catch (err) {
         console.log(err);
         res.status(500).json(err)
     }
     //render create post page.
+
 })
 
 router.get("/dashboard", async (req, res) => {
     try {
-        console.log("uve hit this route4")
+        const allPosts = await Post.findAll({
+            where: {
+                user_id: req.session.user_id,
+            },
+            attributes: ["id", "title", "body", "user_id"],
+            include: [
+                {
+                    model: User,
+                    as: "user",
+                    attributes: ["username"],
+                },
+                {
+                    model: Comment,
+                    as: "comments",
+                    attributes: ["id", "comment_text", "user_id"],
+                    include: [
+                        {
+                            model: User,
+                            as: "user",
+                            attributes: ["username"],
+                        },
+                    ],
+                },
+            ],
+        })
+        if (!allPosts) {
+            res.status(404).json({ message: "No Posts Available" });
+            return;
+        }
+        const posts = allPosts.map((post) => post.get({ plain: true })); // serialize all the posts
+        // console.log(posts);
+        res.render("dashboard", { posts, loggedIn: req.session.loggedIn });
     } catch (err) {
         console.log(err);
         res.status(500).json(err)

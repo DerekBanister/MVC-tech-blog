@@ -3,7 +3,17 @@ const { User, Post, Comment } = require("../../models");
 
 router.get("/", async (req, res) => {
     try {
-        console.log("uve hit this route 0")
+        const allPosts = await Post.findAll({
+            attributes: ["id", "title", "body", "user_id"],
+            include: [
+                {
+                    model: Comment,
+                    as: "comments",
+                    attributes: ["id", "comment_text", "user_id"],
+                },
+            ],
+        })
+        res.json(allPosts);
     } catch (err) {
         console.log(err);
         res.status(500).json(err)
