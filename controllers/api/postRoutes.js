@@ -23,7 +23,24 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
     try {
-        console.log("uve hit this route 1")
+        const onePost = await Post.findOne({
+            where: {
+                id: req.params.id,
+            },
+            attributes: ["id", "title", "body", "user_id"],
+            include: [
+                {
+                    model: Comment,
+                    as: "comments",
+                    attributes: ["id", "comment_text", "user_id"],
+                },
+            ],
+        })
+        if (!onePost) {
+            res.status(404).json({ message: "No Post found with this id" });
+            return;
+        }
+        res.json(onePost);
     } catch (err) {
         console.log(err);
         res.status(500).json(err)
@@ -33,7 +50,12 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
     try {
-        console.log("uve hit this route 2")
+        const createPost = await Post.create({
+            title: req.body.title,
+            body: req.body.body,
+            user_id: req.session.user_id,
+        })
+        res.json(createPost);
     } catch (err) {
         console.log(err);
         res.status(500).json(err)
@@ -43,7 +65,22 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
     try {
-        console.log("uve hit this route 3")
+        const updatePost = await Post.update(
+            {
+                title: req.body.title,
+                body: req.body.body,
+            },
+            {
+                where: {
+                    id: req.params.id,
+                },
+            }
+        )
+        if (!dbPostData) {
+            res.status(404).json({ message: "No Post found with this id" });
+            return;
+        }
+        res.json(updatePost);
     } catch (err) {
         console.log(err);
         res.status(500).json(err)
@@ -53,7 +90,16 @@ router.put("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
     try {
-        console.log("uve hit this route 4")
+        const deletePost = await Post.destroy({
+            where: {
+                id: req.params.id,
+            },
+        })
+        if (!dbPostData) {
+            res.status(404).json({ message: "No Post found with this id" });
+            return;
+        }
+        res.json(deletePost);
     } catch (err) {
         console.log(err);
         res.status(500).json(err)
