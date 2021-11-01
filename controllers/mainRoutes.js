@@ -152,7 +152,7 @@ router.get("/dashboard", async (req, res) => {
         console.log(err);
         res.status(500).json(err)
     }
-})
+});
 
 //all routes working
 module.exports = router;
