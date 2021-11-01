@@ -1,5 +1,11 @@
-<h1 class="padding-20">My Posts</h1>
-<p><a class="link" href="/post">New Post</a></p>
+<div class="card">
+    <h1 id="welcome">Welcome to your profile</h1>
+</div>
+<br>
+<br>
+<p><a class="makePost" href="/post">Click here to create a new post</a></p>
+<br>
+<p class="makePost">Your previous posts will display below</p>
 {{#each posts as |Post| }}
 {{!-- each post --}}
 {{> post Post}}

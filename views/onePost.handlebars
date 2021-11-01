@@ -4,11 +4,6 @@
     <div class="container">
         <p id="post-body" class="post-text post-text-padding">{{post.body}}</p>
     </div>
-    {{!-- If my post edit and delete it --}}
-    {{#if currentUser}}
-    <button id="edit-btn">Edit</button>
-    <button id="delete-btn">Delete</button>
-    {{/if}}
 </div>
 {{!-- Add Comment --}}
 <div class="padding-20">
@@ -22,3 +17,5 @@
 {{#each post.comments as |Comment|}}
 {{> comment Comment}}
 {{/each}}
+{{!-- forgot to link this ........... --}}
+<script src="/js/onePost.js"></script>

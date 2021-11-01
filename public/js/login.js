@@ -18,7 +18,7 @@ async function loginForm(event) {
 
         if (response.ok) {
             console.log(response, " Logged in successfully!");
-            document.location.replace("/");
+            document.location.replace("/dashboard");
         } else {
             alert(response.statusText);
         }

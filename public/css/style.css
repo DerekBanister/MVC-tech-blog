@@ -66,3 +66,20 @@
   white-space: nowrap;
   color: #555;
   }
+  #welcome {
+    text-align: center;
+    color: black;
+    background-color: silver;
+    font-size: xx-large;
+    padding: 5px;
+  }
+  .makePost {
+    justify-content: center;
+    text-align: center;
+    font-weight: bold;
+    font-size: x-large;
+  
+  }
+  .makePost:hover {
+    cursor: pointer;
+  }
