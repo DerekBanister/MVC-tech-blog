@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <title>The Tech Blog</title>
     {{!-- will link css --}}
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 {{!-- nav bar goes on every page --}}
 
@@ -12,21 +13,22 @@
     <nav id="navbar">
         <ul id="navbar-ul">
             <li>
+                <p><button id="logout-btn" class="btn-no-style">Logout</button> </p>
+            </li>
+            <h1 id="nav-header">TTB</h1>
+            <h3 class="ttb">The Tech Blog</h3>
+            <li>
                 <p><a class="link" href="/">Home</a></p>
             </li>
-
             <li>
                 <p><a class="link" href="/dashboard">Dashboard</a></p>
-            </li>
-            <li>
-                <p><button id="logout-btn" class="btn-no-style">Logout</button> </p>
             </li>
             <li>
                 <p><a class="link" href="/login">Login</a></p>
             </li>
         </ul>
-        <h1 id="nav-header">TTB</h1>
     </nav>
+    {{!-- other handlebars files here --}}
     {{{body}}}
 </body>
 

@@ -1,6 +1,5 @@
 // https://mvc-tech-blog-ucb2021.herokuapp.com/
 const router = require("express").Router();
-const sequelize = require("../config/connection");
 const { User, Post, Comment } = require("../models");
 //time to start thinking about other routes, 
 //comment route, post route, and user/dashboard route.
@@ -116,7 +115,7 @@ router.get("/post", async (req, res) => {
 
 router.get("/dashboard", async (req, res) => {
     try {
-        console.log(req.session, "This = session id")
+        // console.log(req.session, "This = session id")
         const allPosts = await Post.findAll({
             where: {
                 user_id: req.session.user_id,
@@ -156,13 +155,4 @@ router.get("/dashboard", async (req, res) => {
 })
 
 //all routes working
-
-
-
-
-
-
-
-
-
 module.exports = router;
