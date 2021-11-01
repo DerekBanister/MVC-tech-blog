@@ -32,7 +32,7 @@ router.get("/:id", async (req, res) => {
             where: {
                 id: req.params.id,
             },
-            attributes: ["id", "username", "email", "password"], //remove password in the futrue
+            attributes: ["id", "username", "email", "password"],
             include: [
                 {
                     model: Post,

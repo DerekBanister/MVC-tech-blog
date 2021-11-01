@@ -1,0 +1,20 @@
+[
+    {
+        "id": "1",
+        "title": "Test",
+        "body": "ducks are crazy beings",
+        "user_id": 3
+    },
+    {
+        "id": "2",
+        "title": "Test1",
+        "body": "cassowaries are worse",
+        "user_id": 1
+    },
+    {
+        "id": "3",
+        "title": "Test2",
+        "body": "Jk both are awful creatures",
+        "user_id": 2
+    }
+]

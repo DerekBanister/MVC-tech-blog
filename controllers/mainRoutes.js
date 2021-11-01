@@ -116,6 +116,7 @@ router.get("/post", async (req, res) => {
 
 router.get("/dashboard", async (req, res) => {
     try {
+        console.log(req.session, "This = session id")
         const allPosts = await Post.findAll({
             where: {
                 user_id: req.session.user_id,
