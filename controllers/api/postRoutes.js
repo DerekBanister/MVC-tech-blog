@@ -76,7 +76,7 @@ router.put("/:id", async (req, res) => {
                 },
             }
         )
-        if (!dbPostData) {
+        if (!updatePost) {
             res.status(404).json({ message: "No Post found with this id" });
             return;
         }
@@ -95,7 +95,7 @@ router.delete("/:id", async (req, res) => {
                 id: req.params.id,
             },
         })
-        if (!dbPostData) {
+        if (!deletePost) {
             res.status(404).json({ message: "No Post found with this id" });
             return;
         }

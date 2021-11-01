@@ -3,7 +3,22 @@ const { User, Post, Comment } = require("../../models");
 
 router.get("/", async (req, res) => {
     try {
-        console.log("uve hit this route 0")
+        const userData = await User.findAll({
+            attributes: ["id", "username", "email", "password"], //TODO remove password in the futrue
+            include: [
+                {
+                    model: Post,
+                    as: "posts",
+                    attributes: ["id", "title", "body"],
+                },
+                {
+                    model: Comment,
+                    as: "comments",
+                    attributes: ["id", "comment_text", "post_id"],
+                },
+            ],
+        })
+        res.json(userData);
     } catch (err) {
         console.log(err);
         res.status(500).json(err)
@@ -13,7 +28,29 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
     try {
-        console.log("uve hit this route 1")
+        const oneUser = await User.findOne({
+            where: {
+                id: req.params.id,
+            },
+            attributes: ["id", "username", "email", "password"], //remove password in the futrue
+            include: [
+                {
+                    model: Post,
+                    as: "posts",
+                    attributes: ["id", "title", "body"],
+                },
+                {
+                    model: Comment,
+                    as: "comments",
+                    attributes: ["id", "comment_text", "post_id"],
+                },
+            ],
+        })
+        if (!oneUser) {
+            res.status(404).json({ message: "No User found with this id" });
+            return;
+        }
+        res.json(oneUser);
     } catch (err) {
         console.log(err);
         res.status(500).json(err)
@@ -21,9 +58,20 @@ router.get("/:id", async (req, res) => {
     //get user by id
 })
 
-router.post("/:id", async (req, res) => {
+router.post("/", async (req, res) => {
     try {
-        console.log("uve hit this route 2")
+        const createUser = await User.create({
+            //expects username, email, password
+            username: req.body.username,
+            email: req.body.email,
+            password: req.body.password,
+        })
+        req.session.save(() => {
+            req.session.user_id = createUser.id;
+            req.session.username = createUser.username;
+            req.session.loggedIn = true;
+            res.json(createUser);
+        });
     } catch (err) {
         console.log(err);
         res.status(500).json(err)
@@ -33,7 +81,29 @@ router.post("/:id", async (req, res) => {
 
 router.post("/login", async (req, res) => {
     try {
-        console.log("uve hit this route 3")
+        const loginUser = await User.findOne({
+            where: {
+                email: req.body.email,
+            },
+        })
+        if (!loginUser) {
+            res.status(400).json({ message: "User not found" });
+            return;
+        }
+        const validPassword = loginUser.checkPassword(req.body.password);
+
+        if (!validPassword) {
+            res.status(400).json({ message: "Incorrect Password!" });
+            return;
+        }
+        req.session.save(() => {
+            //declare session variables
+            req.session.user_id = loginUser.id;
+            req.session.username = loginUser.username;
+            req.session.loggedIn = true;
+            //send response
+            res.json({ user: loginUser, message: "You are now logged in!" });
+        });
     } catch (err) {
         console.log(err);
         res.status(500).json(err)
@@ -43,7 +113,16 @@ router.post("/login", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
     try {
-        console.log("uve hit this route 4")
+        const deleteUser = await User.destroy({
+            where: {
+                id: req.params.id,
+            },
+        })
+        if (!deleteUser) {
+            res.status(404).json({ message: "No User found with this id" });
+            return;
+        }
+        res.json(deleteUser);
     } catch (err) {
         console.log(err);
         res.status(500).json(err)
@@ -51,16 +130,16 @@ router.delete("/:id", async (req, res) => {
     //delete user
 })
 
-router.get("/logout", async (req, res) => {
-    try {
-        console.log("uve hit this route 5")
-    } catch (err) {
-        console.log(err);
-        res.status(500).json(err)
+router.get("/logout", (req, res) => {
+    if (req.session.loggedIn) {
+        req.session.destroy(() => {
+            // end the session
+            res.status(204).end();
+        });
+    } else {
+        res.status(404).end();
     }
-    //logout user end session
-})
+});
 
-
-//ALL ROUTES TESTED AND FUNCTIONING
+//ALL ROUTES working
 module.exports = router;
