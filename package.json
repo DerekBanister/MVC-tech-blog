@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/DerekBanister/MVC-tech-blog/issues"
   },
-  "homepage": "https://github.com/DerekBanister/MVC-tech-blog#readme",
+  "homepage": "https://mvc-tech-blog-ucb2021.herokuapp.com/",
   "dependencies": {
     "bcrypt": "^5.0.0",
     "connect-session-sequelize": "^7.0.4",
